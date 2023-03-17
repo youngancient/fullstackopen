@@ -1,0 +1,1 @@
+## Solutions to part 0  exercises 0.4 through 0.6
