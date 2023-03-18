@@ -1,0 +1,25 @@
+
+.bdr{
+    border: 1px solid black;
+}
+p{
+    word-wrap: break-word;
+}
+.btn{
+    margin-top: 1rem;
+}
+.btn button{
+    height: 45px;
+    width: 120px;
+    font-weight: 600;
+}
+.btn button:nth-of-type(2){
+    margin-left: 1rem;
+}
+.display .vote{
+    margin-top: 0.5rem;
+}
+.anecdote{
+    font-family: monospace;
+    font-size: 1.2rem;
+}
