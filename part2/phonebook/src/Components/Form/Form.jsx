@@ -1,11 +1,13 @@
 import { useState } from "react";
 import "./style.css";
 import { v4 as uuidv } from "uuid";
+import axios from "axios";
+import phoneService from "../../Services/Phonebook";
 
-const Form = ({contacts, setContacts, duplicate, setDuplicate}) => {
+const Form = ({ contacts, setContacts, duplicate, setDuplicate }) => {
   const [form, setForm] = useState({
-    number: { value: "", isEmpty: true},
-    name: { value: "", isEmpty: true},
+    number: { value: "", isEmpty: true },
+    name: { value: "", isEmpty: true },
   });
   const [nameError, setNameError] = useState("");
   const [numError, setNumError] = useState("");
@@ -59,46 +61,59 @@ const Form = ({contacts, setContacts, duplicate, setDuplicate}) => {
     }
   };
 
-  // this checks if the contact already exists in  state
-  const filter =(name)=>{
-    let equal = false;
-    contacts.forEach((contact)=>{
-        let a  = contact.name.toLowerCase();
-        let b = name.toLowerCase();
-        if(a === b){
-          equal = true;
-        }
+  // this checks if the contact already exists in  state and returns it
+  const filter = (name) => {
+    const c = contacts.filter((contact) => {
+      let a = contact.name.toLowerCase();
+      let b = name.toLowerCase();
+      return a===b
     });
-    return equal;
-  }
+    return c[0];
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (form.name.isEmpty == false && form.number.isEmpty == false) {
       setNameError();
       setNumError();
-        if(filter(form.name.value)){
-            alert(`${form.name.value} is already added to the phonebook`);
-        }else{
-            setForm({
-              number: { value: "", isEmpty: true },
-              name: { value: "", isEmpty: true },
-            });
-            setContacts([
-              ...contacts,
-              { name : form.name.value, number : form.number.value, id : uuidv()}
-            ])
-            setDuplicate([
-              ...duplicate,
-              { name : form.name.value, number : form.number.value, id : uuidv()}
-            ])
+      let filtered = filter(form.name.value);
+      // if the contact name already exists
+      if (filtered) {
+        const updatedContact = { ...filtered, number : form.number.value};
+        if (
+          window.confirm(
+            `${form.name.value} is already added to the phonebook, replace the old number with the new?`
+          )
+        ) {
+          phoneService
+          .update(filtered.id,updatedContact)
+          .then(updatedList => {
+            const updated = contacts.map(contact => contact.id !== filtered.id ? contact : updatedList.data);
+            setContacts(updated);
+            setDuplicate(updated);
+          })
         }
+      } else {
+        let newObj = { name: form.name.value, number: form.number.value };
+        phoneService.create(newObj).then((res) => {
+          setContacts(contacts.concat(res.data));
+          setDuplicate(contacts.concat(res.data));
+          setTimeout(() => {
+            alert(`${form.name.value} was added successfully`);
+          }, 500);
+        });
+      }
+      setForm({
+        number: { value: "", isEmpty: true },
+        name: { value: "", isEmpty: true },
+      });
     } else {
-        if(form.name.isEmpty == true){
-            setNameError("Name cannot be empty");
-        }
-        if(form.number.isEmpty == true){
-            setNumError("Number is required");
-        }
+      if (form.name.isEmpty == true) {
+        setNameError("Name cannot be empty");
+      }
+      if (form.number.isEmpty == true) {
+        setNumError("Number is required");
+      }
     }
   };
   return (
@@ -121,9 +136,10 @@ const Form = ({contacts, setContacts, duplicate, setDuplicate}) => {
         <div className="input">
           <label htmlFor="number">Number</label>
           <input
-            type="number"
+            type="tel"
             name="number"
             value={form.number.value}
+            pattern ="[0-9\-]+"
             id=""
             onChange={handleNumberChange}
             onKeyUp={handleNumberChange}

@@ -1,24 +1,28 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import "./App.css";
 import Form from "./Components/Form/Form";
 import NumberList from "./Components/NumberList/NumberList";
 import Search from "./Components/Seach/Search";
+import phoneService from "./Services/Phonebook";
 
 function App() {
   const [contacts, setContacts] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
   // read only state - basically copies the first state values before mutation on filter
   const [duplicate, setDuplicate] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
-
+  useEffect(()=>{
+    phoneService
+    .getAll()
+    .then(res =>{
+      setContacts(res.data);
+      setDuplicate(res.data);
+    })
+    .catch((err) => {
+      console.log("error");
+    });
+  },[])
   return (
     <div className="App">
       <h2>Phonebook</h2>
@@ -42,7 +46,7 @@ function App() {
       </section>
       <section>
         <h2>Numbers</h2>
-        <NumberList contacts={contacts} />
+        <NumberList contacts={contacts} setContacts={setContacts} setDuplicate={setDuplicate} />
       </section>
     </div>
   );
