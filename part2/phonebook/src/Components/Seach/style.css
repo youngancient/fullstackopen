@@ -1,0 +1,9 @@
+
+
+.search-box{
+    display: flex;
+    align-items: center;
+}
+.search-box input{
+    margin-left: 1rem;
+}

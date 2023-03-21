@@ -1,0 +1,17 @@
+
+.App{
+  padding: 1.5rem;
+}
+section{
+  margin-top: 2rem;
+}
+
+input{
+  height: 40px;
+  padding: 1rem;
+}
+@media screen and (min-width: 728px) {
+  .App{
+    padding: 2rem;
+  }
+}

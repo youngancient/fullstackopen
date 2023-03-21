@@ -1,0 +1,23 @@
+
+label{
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+.error{
+    font-size: 13px;
+    margin-top: 0.5rem;
+    color: red;
+}
+form .input{
+    margin-top: 1rem;
+}
+form input{
+    margin-left: 1rem;
+}
+.add-btn{
+    margin-top: 1.5rem;
+}
+.add-btn button{
+    height: 40px;
+    width: 120px;
+}
