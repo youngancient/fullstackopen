@@ -59,16 +59,17 @@ const Form = ({contacts, setContacts, duplicate, setDuplicate}) => {
     }
   };
 
+  // this checks if the contact already exists in  state
   const filter =(name)=>{
-    contacts.filter((contact)=>{
+    let equal = false;
+    contacts.forEach((contact)=>{
         let a  = contact.name.toLowerCase();
         let b = name.toLowerCase();
-        if(contact.name.toLowerCase() === name.toLowerCase()){
-            console.log(a === b);
-            return (a === b);
+        if(a === b){
+          equal = true;
         }
-    })
-
+    });
+    return equal;
   }
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,10 +77,8 @@ const Form = ({contacts, setContacts, duplicate, setDuplicate}) => {
       setNameError();
       setNumError();
         if(filter(form.name.value)){
-            console.log(filter(form.name.value));
-            alert("e dey before");
+            alert(`${form.name.value} is already added to the phonebook`);
         }else{
-            console.log("yepa")
             setForm({
               number: { value: "", isEmpty: true },
               name: { value: "", isEmpty: true },
