@@ -4,7 +4,7 @@ import { v4 as uuidv } from "uuid";
 import axios from "axios";
 import phoneService from "../../Services/Phonebook";
 
-const Form = ({ contacts, setContacts, duplicate, setDuplicate }) => {
+const Form = ({ contacts, setContacts, duplicate, setDuplicate, setMessage }) => {
   const [form, setForm] = useState({
     number: { value: "", isEmpty: true },
     name: { value: "", isEmpty: true },
@@ -91,6 +91,16 @@ const Form = ({ contacts, setContacts, duplicate, setDuplicate }) => {
             const updated = contacts.map(contact => contact.id !== filtered.id ? contact : updatedList.data);
             setContacts(updated);
             setDuplicate(updated);
+            setMessage({
+              text : `updated ${form.name.value} number`,
+              type : "success",
+            });
+            setTimeout(() => {
+              setMessage({
+                text : null,
+                type : null,
+              });
+            }, 3000);
           })
         }
       } else {
@@ -98,9 +108,16 @@ const Form = ({ contacts, setContacts, duplicate, setDuplicate }) => {
         phoneService.create(newObj).then((res) => {
           setContacts(contacts.concat(res.data));
           setDuplicate(contacts.concat(res.data));
+          setMessage({
+            text : `${form.name.value} was added successfully`,
+            type : "success",
+          });
           setTimeout(() => {
-            alert(`${form.name.value} was added successfully`);
-          }, 500);
+            setMessage({
+              text : null,
+              type : null,
+            });
+          }, 3000);
         });
       }
       setForm({

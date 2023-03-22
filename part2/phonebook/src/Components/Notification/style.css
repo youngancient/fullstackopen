@@ -1,0 +1,19 @@
+
+
+.msg{
+    margin-top: 0.5rem;
+    padding: 1rem;
+}
+.msg p{
+    font-family: monospace;
+    font-weight: 500;
+    font-size: 1rem;
+}
+.success{
+    border: 2px solid green;
+    color: green;
+}
+.error{
+    border: 2px solid red;
+    color: red;
+}
